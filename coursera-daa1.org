@@ -1,107 +1,105 @@
 * Week 1
 ** Merge sort
 
-#+begin_src C :tangle merge_sort.c :comments yes
-      #include <stdlib.h>
-      #include <stdio.h>
-      
-      void print_array(int* array, int size);
-      int* merge_sort(int* array, int size);
-      
-      int main ()
-      {
-          int array[] = { 9, 7, 8, 0, 1, 3, 4 };
-          
-          int size = sizeof(array) / sizeof(int);
-      
-          int* sorted = merge_sort(array, size);      
-          print_array(sorted, size);
-          free(sorted);
-          sorted = NULL;
-          return 0;
+#+begin_src C
+  #include <stdlib.h>
+  #include <stdio.h>
+
+  void print_array(int* array, int size);
+  int* merge_sort(int* array, int size);
+
+  int main ()
+  {
+      int array[] = { 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 };
+
+      int size = sizeof(array) / sizeof(int);
+
+      print_array(merge_sort(array, size), size);
+
+      return 0;
+  }
+
+  void print_array(int* array, int size)
+  {
+      int i;
+
+      for (i = 0; i < size; i++) {
+	  if (i < size - 1) {
+	      printf("%d, ", array[i]);
+	  }
+	  else {
+	      printf("%d", array[i]);
+	  }
       }
-      
-      void print_array(int* array, int size)
-      {
-          printf("size : %d\n", size);
-      
-          int i;
-       
-          for (i = 0; i < size; i++) {
-              if (i == 0) {
-                  printf("{ %d, ", array[i]);
-              }
-              else if (i < size - 1) {
-                  printf("%d, ", array[i]);
-              }
-              else {
-                  printf("%d }", array[i]);
-              }
-          }
+  }
+
+  int* merge_sort(int* array, int size)
+  {
+      if (size < 2) return array;
+
+      // split & recurse
+      int center = size / 2;
+      int *left  = merge_sort(array, center);
+      int *right = merge_sort(array + center, size - center);
+
+      // merge
+      int* merge = malloc(size * sizeof(int));
+      int k = 0, i = 0, j = 0;
+
+      for (k = 0; k < size; k++) {
+	  if (j >= size - center) {
+	      merge[k] = left[i++];
+	  }
+	  else if (left[i] < right[j]) {
+	      merge[k] = left[i++];
+	  }
+	  else if (i >= center) {
+	      merge[k] = right[j++];
+	  }
+	  else if (right[j] < left[i]) {
+	      merge[k] = right[j++];
+	  }
       }
-      
-      int* merge_sort(int* array, int size)
-      {
-          if (size < 2) return array;
-          
-          // split & recurse
-          int center = size / 2;
-          int *left  = merge_sort(array, center);
-          int *right = merge_sort(array + center, size - center);
-          
-          // merge
-          int* merge = malloc(size * sizeof(int));
-          int k = 0, i = 0, j = 0;
-          
-          for (k = 0; k < size; k++) {
-              if (j == size - center || left[i] < right[j]) {
-                  merge[k] = left[i++];
-              }
-              else if (i == center || right[j] < left[i]) {
-                  merge[k] = right[j++];
-              }
-    
-          }
-      
-          return merge;
-      }
+
+      return merge;
+  }
 #+end_src
 
 #+results:
-: size : 7
-: { 0, 1, 0, 0, 7, 8, 9 }
+: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
 
-   
+
 #+begin_src js
   function merge_sort(array) {
-  
+
       var size = array.length;
-  
+
       if (size < 2) {
-          return array;
-      }  
-  
+	  return array;
+      }
+
       // split & recurse
       var center = parseInt(size / 2, 10); // parseInt radix gotcha...
       var left   = merge_sort(array.slice(0, center));
       var right  = merge_sort(array.slice(center, size));
-  
+
+      // merge
       var merge = new Array(size);
-      
+
       for (var k = 0, i = 0, j = 0; k < size; k++) {
-          if (j == size - center || left[i] < right[j]) {
-              merge[k] = left[i++];
-          }
-          else if (i == center || right[j] < left[i]) {
-              merge[k] = right[j++];
-          }
+	  if (j == size - center || left[i] < right[j]) {
+	      merge[k] = left[i++];
+	  }
+	  else if (i == center || right[j] < left[i]) {
+	      merge[k] = right[j++];
+	  }
       }
-  
+
       return merge;
   };
-  
-  require('util').print(merge_sort([ 9, 7, 8, 0, 1, 11, 4]));
+
+  console.log(merge_sort([ 9, 7, 8, 0, 1, 11, 4]));
 #+end_src
 
 #+results:
-: 0,1,4,7,8,9,11
+| 0 | 1 | 4 | 7 | 8 | 9 | 11 |
