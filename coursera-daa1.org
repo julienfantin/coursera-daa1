@@ -1,4 +1,10 @@
 * Week 1
+** Big O
+
+   exponentials > polynomials : 3^n > n^5
+   n^a > n^b if a > b
+   polynomials > logarithms : n > (log n)^3
+
 ** Merge sort
 
 #+begin_src C
@@ -104,7 +110,6 @@
 #+results:
 | 0 | 1 | 4 | 7 | 8 | 9 | 11 |
 
-
 ** Inversions
 #+begin_src C
   #include <stdio.h>
@@ -184,3 +189,82 @@
 
 #+results:
 : 8
+
+** Matrix multiplications
+#+begin_src js
+  var x = [[ 1,  2,  3,  4],
+	   [ 5,  6,  7,  8],
+	   [ 9, 10, 11, 12],
+	   [13, 14, 15, 16]];
+
+  var Splits = {
+      "TopLeft":1, "TopRight":2,
+      "BottomLeft":3, "BottomRight":4,
+      "SplitError":5
+  };
+
+  function currentSplit(matrixSize, i, j) {
+
+      var center = matrixSize / 2;
+
+      if (i < center && j < center) {
+	  return Splits.TopLeft;
+      }
+      else if (i >= center && j < center ) {
+	  return Splits.TopRight;
+      }
+      else if (i < center && j >= center) {
+	  return Splits.BottomLeft;
+      }
+      else if (i >= center && j >= center) {
+	  return Splits.BottomRight;
+      }
+
+      return Splits.SplitError;
+  }
+
+  function matrixMultiply(x, y) {
+
+      // Divide
+
+  }
+
+  function splitMatrix(x) {
+
+      // Assume dimensions n * n
+      var n = x.length;
+
+      var splits = new Array(4);
+
+      for (var i = 0; i < n; i++) {
+	  for (var j = 0; j < n; j++) {
+	      switch(currentSplit(n, i, j)) {
+	      case Splits.TopLeft:
+		  break;
+	      case Splits.TopRight:
+		  break;
+	      case Splits.BottomLeft:
+		  break;
+	      case Splits.BottomRight:
+		  break;
+	      }
+	  }
+      }
+  }
+
+
+
+  function fib2(n) {
+      if (n == 0) return 0;
+
+      var fib = new Array(n+1);
+
+      for (var i = 0; i == n; i++) {
+	  if (i == 0) fib[i] = 0;
+	  else if (i == 1) fib[i] = 1;
+	  else fib[i] = fib[i-2] + fib[i-1];
+      }
+
+      return fib[n];
+  }
+#+end_src
