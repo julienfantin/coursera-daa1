@@ -103,3 +103,84 @@
 
 #+results:
 | 0 | 1 | 4 | 7 | 8 | 9 | 11 |
+
+
+** Inversions
+#+begin_src C
+  #include <stdio.h>
+  #include <stdlib.h>
+
+  int count_inversions(int* array, int size)
+  {
+      if (size < 2) return 0;
+
+      int center = size / 2;
+      int left_count  = count_inversions(array, center);
+      int right_count = count_inversions(array + center, size - center);
+      int split_count = 0;
+
+      int k = 0, i = 0, j = center;
+      for (k = 0; k < size; k++) {
+	  if (j == size || array[i] < array[j]) {
+	      i++;
+	  }
+	  else if (i == center || array[j] < array[i]) {
+	      j++;
+	      if (i != center) split_count += center - i;
+	  }
+      }
+
+      return left_count + right_count + split_count;
+  }
+
+  int main ()
+  {
+      int test[] = {9, 8, 7, 8, 5};
+      printf("%d", count_inversions(test, 5));
+      return 0;
+  }
+
+#+end_src
+
+#+results:
+: 8
+
+#+begin_src js
+
+  function countInversions(array) {
+
+      var size = array.length;
+
+      if (size < 2) {
+	  return 0;
+      }
+
+      // split & recurse
+      var center = parseInt(size / 2, 10); // parseInt radix gotcha...
+      var left   = array.slice(0, center);
+      var right  = array.slice(center, size);
+
+      var leftCount  = countInversions(left);
+      var rightCount = countInversions(right);
+
+      // Count split inversion
+      var splitCount = 0;
+
+      for (var k = 0, i = 0, j = 0; k < size; k++) {
+	  if (j == right.length || left[i] < right[j]) {
+	      i++;
+	  }
+	  else if (i == left.length || right[j] < left[i]) {
+	      j++;
+	      if (i != left.lentgh) splitCount += left.length - i;
+	  }
+      }
+
+      return leftCount + rightCount + splitCount;
+  };
+
+  console.log(countInversions([9, 8, 7, 8, 5]));
+#+end_src
+
+#+results:
+: 8
