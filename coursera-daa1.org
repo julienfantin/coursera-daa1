@@ -1,9 +1,8 @@
 * Week 1
 ** Big O
-
-   exponentials > polynomials : 3^n > n^5
-   n^a > n^b if a > b
-   polynomials > logarithms : n > (log n)^3
+exponentials > polynomials : 3^n is O(n^5)
+n^a is O(n^b) if a < b
+polynomials > logarithms : n is O((log n)^3)
 
 ** Merge sort
 
@@ -151,44 +150,60 @@
 : 8
 
 #+begin_src js
-
-  function countInversions(array) {
+    function inversions(array) {
 
       var size = array.length;
 
       if (size < 2) {
-	  return 0;
+	return 0;
       }
 
       // split & recurse
-      var center = parseInt(size / 2, 10); // parseInt radix gotcha...
-      var left   = array.slice(0, center);
-      var right  = array.slice(center, size);
+      var center = parseInt(size / 2, 10)
+      var left   = array.slice(0, center)
+      var right  = array.slice(center, size)
 
-      var leftCount  = countInversions(left);
-      var rightCount = countInversions(right);
+      var leftCount  = inversions(left);
+      var rightCount = inversions(right)
 
       // Count split inversion
-      var splitCount = 0;
+      var splitCount = 0
 
       for (var k = 0, i = 0, j = 0; k < size; k++) {
-	  if (j == right.length || left[i] < right[j]) {
-	      i++;
-	  }
-	  else if (i == left.length || right[j] < left[i]) {
-	      j++;
-	      if (i != left.lentgh) splitCount += left.length - i;
-	  }
+	if (j == right.length || left[i] < right[j]) {
+	  i++
+	}
+	else if (i == left.length || right[j] < left[i]) {
+	  j++
+	  if (i != left.lentgh) splitCount += left.length - i
+	}
       }
 
-      return leftCount + rightCount + splitCount;
-  };
+      return leftCount + rightCount + splitCount
+    }
 
-  console.log(countInversions([9, 8, 7, 8, 5]));
+    function getLines(filename) {
+      var fs = require('fs')
+      return fs.readFileSync(filename, 'utf8').split("\n")
+    }
+
+    function fileToIntArray(filename) {
+      var lines = getLines(filename).filter(function (c) { return parseInt(c, 10) != NaN })
+
+	return lines
+    }
+
+    function test() {
+      var ints = fileToIntArray('/Users/julienfantin/Downloads/IntegerArray.txt')
+      console.log(inversions(ints))
+    }
+
+  test()
 #+end_src
 
 #+results:
-: 8
+: 2216994310
+: undefined
 
 ** Matrix multiplications
 #+begin_src js
