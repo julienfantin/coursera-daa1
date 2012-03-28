@@ -300,3 +300,63 @@ polynomials > logarithms : n is O((log n)^3)
       return fib[n];
   }
 #+end_src
+* Week 2
+** Quicksort
+#+begin_src js
+   function quicksort(array, begin, end) {
+
+       if (typeof begin == 'undefined') begin = 0
+       if (typeof end == 'undefined') end = array.length
+
+       if (end - begin < 2) return
+
+       var pivot = _quicksortChoosePivot(array, begin, end)
+
+       partition(array, begin, end, pivot)
+
+       quicksort(array, begin, pivot)
+       quicksort(array, pivot + 1, end)
+
+       return array
+   }
+
+   function _quicksortChoosePivot(array, begin, end) {
+       return begin //+ Math.floor(Math.random() * (end - begin))
+   }
+
+   Array.prototype.swap = function(index1, index2) {
+
+       var tmp = this[index1]
+
+       this[index1] = this[index2]
+       this[index2] = tmp
+
+       return this
+   }
+
+   function partition(array, begin, end, pivot) {
+
+       var i = begin,
+       pivotValue = array[pivot]
+
+       if (pivot != begin) array.swap(begin, pivot)
+
+       for (var j = i; j <= end; j++) {
+
+	   // If element > pivot do nothing...
+	   if (array[j] <= pivotValue) {
+	       // swap element with left most element that's bigger than the pivot
+	       array.swap(i, j)
+	       i++
+	   }
+       }
+
+       array.swap(begin, i - 1)
+   }
+
+  console.log(quicksort([5, 14, 3, 2, 1]))
+
+#+end_src
+
+#+results:
+| 1 | 2 | 3 | 5 | 14 |
