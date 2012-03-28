@@ -150,60 +150,77 @@ polynomials > logarithms : n is O((log n)^3)
 : 8
 
 #+begin_src js
+    function mergeSort(array) {
+
+	if (array.length < 2) return array
+
+	// split & recurse
+	var size = array.length,
+	center   = parseInt(size / 2, 10),
+	left     = mergeSort(array.slice(0, center)),
+	right    = mergeSort(array.slice(center, size)),
+	merge    = new Array(size),
+	k        = 0,
+	i        = 0,
+	j        = 0
+
+	for (k = 0, i = 0, j = 0; k < size; k++) {
+	    if (j === size - center || left[i] < right[j]) {
+		merge[k] = left[i++];
+	    }
+	    else if (i === center || right[j] < left[i]) {
+		merge[k] = right[j++];
+	    }
+	}
+
+	return merge
+    }
+
     function inversions(array) {
 
-      var size = array.length;
+	if (array.length < 2) return 0;
 
-      if (size < 2) {
-	return 0;
-      }
+	// split & recurse
+	var size   = array.lentgh,
+	center     = parseInt(size / 2, 10),
+	left       = array.slice(0, center),
+	right      = array.slice(center, size),
+	leftCount  = inversions(left),
+	rightCount = inversions(right),
+	splitCount = 0,
+	k          = 0,
+	i          = 0,
+	j          = 0
 
-      // split & recurse
-      var center = parseInt(size / 2, 10)
-      var left   = array.slice(0, center)
-      var right  = array.slice(center, size)
-
-      var leftCount  = inversions(left);
-      var rightCount = inversions(right)
-
-      // Count split inversion
-      var splitCount = 0
-
-      for (var k = 0, i = 0, j = 0; k < size; k++) {
-	if (j == right.length || left[i] < right[j]) {
-	  i++
+	for (k = 0, i = 0, j = 0; k < size; k++)
+	{
+	    if (j === size - center || left[i] < right[j]) {
+		i++
+	    }
+	    else if (i === center || right[j] < left[i]) {
+		j++
+		if (i !== center)splitCount += left.length - i
+	    }
 	}
-	else if (i == left.length || right[j] < left[i]) {
-	  j++
-	  if (i != left.lentgh) splitCount += left.length - i
-	}
-      }
 
-      return leftCount + rightCount + splitCount
+	return leftCount + rightCount + splitCount
     }
 
     function getLines(filename) {
-      var fs = require('fs')
-      return fs.readFileSync(filename, 'utf8').split("\n")
-    }
-
-    function fileToIntArray(filename) {
-      var lines = getLines(filename).filter(function (c) { return parseInt(c, 10) != NaN })
-
-	return lines
+	var fs = require('fs')
+	return fs.readFileSync(filename, 'utf8').split("\n").filter(function (element, index, array) { return !isNaN(parseInt(element, 10)) }).map(function (element) { return parseInt(element, 10) })
     }
 
     function test() {
-      var ints = fileToIntArray('/Users/julienfantin/Downloads/IntegerArray.txt')
-      console.log(inversions(ints))
+  //      var ints = getLines('/Users/julienfantin/Downloads/IntegerArray.txt')
+
+	console.log(inversions([7, 5, 1, 4, 6]))
     }
 
-  test()
+    test()
 #+end_src
 
 #+results:
-: 2216994310
-: undefined
 
 ** Matrix multiplications
 #+begin_src js
